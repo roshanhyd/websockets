@@ -4,6 +4,14 @@ var socketCurrentData =[];
 var socketdata =[];
 var socketStatus = false;
 var currrentData =[];
+var popupNotification = $("#popupNotification").kendoNotification({
+	 position: {
+        pinned: true,
+        top: 30,
+        right: 30,
+        appendTo: "#appendto"
+    }
+    }).data("kendoNotification");
 var dataSource12 = new kendo.data.DataSource({
     transport: {
       read:  {
@@ -13,6 +21,8 @@ var dataSource12 = new kendo.data.DataSource({
       }
     }
   });  
+
+	
 
 $(function(){
 /*    function displayLoading(target) {
@@ -53,6 +63,7 @@ var stompClient = null;
               			 data[index].poStatus = value1.PO_STATUS?value1.PO_STATUS :data[index].poStatus;
               			 data[index].projectStatus = value1.PROJECT_STATUS?value1.PROJECT_STATUS :data[index].projectStatus;
               			 data[index].pslc = value1.PSLC?value1.PSLC :data[index].pslc;	
+              			data[index].siteTracker = value1.SITETRACKER?value1.SITETRACKER: data[index].siteTracker;
               			 }
        			  
               		}) 
@@ -221,6 +232,7 @@ function updateRow(options){
 	        	}),
 	        success: function (result) {
 	        		 options.success(result);
+	        		  popupNotification.show("PO Request Updated Successfuly", "info");
 	        		// popupNotification.show("PO Request Created Successfuly", "info");
 	 	    },
 	        error: function (result) {
@@ -254,6 +266,7 @@ function createRow(options){
         		}),
 	        success: function (result) {
 	        		 options.success(result);
+	        		 popupNotification.show("PO Request Created Successfuly", "info");
 	 	    },
 	        error: function (result) {
 	        	options.error(result);
@@ -270,6 +283,7 @@ function deleteRow(options){
     contentType : "application/json; charset=utf-8",
        success: function (result) {
        		 options.success(result);
+       		 popupNotification.show("PO Request Deleted Successfuly", "info");
 	    },
        error: function (result) {
        	options.error(result);

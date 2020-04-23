@@ -86,6 +86,7 @@ margin-left:50px;
 
 <body id="page-top">
 <div id="loader" class="center"></div> 
+<span id="popupNotification" style="display:none;"></span>  
 	<div id="wrapper">
 		<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 <li>
