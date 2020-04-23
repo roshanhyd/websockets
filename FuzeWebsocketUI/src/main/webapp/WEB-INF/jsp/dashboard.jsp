@@ -19,6 +19,10 @@
 	 
 	
 <style type="text/css">
+div.k-loading-mask
+{
+    z-index: 1; /* must be larger than the z-index:2 of #container */
+}
 #details-container {
 	padding: 10px;
 }
@@ -154,7 +158,7 @@ margin-left:50px;
 				<!-- End of Topbar -->
 
 				<!-- Begin Page Content -->
-				<div class="container-fluid">
+				<div class="container-fluid" id="pageButton">
 
 					<!-- Page Heading -->
 					<!-- <h1 class="h3 mb-2 text-gray-800">Tables</h1>

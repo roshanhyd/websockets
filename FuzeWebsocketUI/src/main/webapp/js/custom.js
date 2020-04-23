@@ -3,6 +3,7 @@ var readDataList = [];
 var socketCurrentData =[];
 var socketdata =[];
 var socketStatus = false;
+var currrentData =[];
 var dataSource12 = new kendo.data.DataSource({
     transport: {
       read:  {
@@ -11,7 +12,24 @@ var dataSource12 = new kendo.data.DataSource({
           cache: false,
       }
     }
-  });
+  });  
+
+$(window).on("load", function(){
+		   kendo.ui.progress(element, true);  
+	   });
+	
+
+$(function(){
+    function displayLoading(target) {
+        var element = $(target);
+        kendo.ui.progress(element, true);
+        setTimeout(function(){
+            kendo.ui.progress(element, false);
+        }, 3000);        
+    }
+
+    displayLoading(document.body);
+    
 var stompClient = null;
 //$('#btn').click(function () {// if you want to do this on any click then enable
     var socket = new SockJS('http://localhost:9191/fuze-websocket');
@@ -20,17 +38,17 @@ var stompClient = null;
         // setConnected(true);
         console.log('Connected: ' + frame);
         stompClient.subscribe('/project/data', function (greeting) {
-            var currrentData = JSON.parse(greeting.body);
+             currrentData = JSON.parse(greeting.body);
             socketdata=currrentData;
             console.log(socketdata);
             console.log(currrentData);
-            
+                      
            
        	 dataSource12.fetch(function(){
-       		
-          	  var data = dataSource12._pristineData;
+       		var data = dataSource12._pristineData;
           	if(currrentData != ""){
           		
+          	
        		  $.each(data, function(index, value) {
        			  $.each(socketdata, function(index1, value1) {
        				 if(data[index].siteProjectsId == socketdata[index1].SITE_PROJECT_ID && data[index].siteInfoId == socketdata[index1].SITE_INFO_ID){
@@ -56,7 +74,7 @@ var stompClient = null;
 					             },
 					        update: function (options) {
 					        updateRow(options);
-					        window.location.replace("/");
+					      //  window.location.replace("/");
 					       
 					             },
 					        
@@ -94,7 +112,7 @@ var stompClient = null;
                                    	 projectType: {type:"string"},
                                    	 customerProjectType: {type:"string"},
                                    	 lastModifiedBy: {type:"string"},
-                                   	 lastModifiedDate: {type:"string"}
+                                   	 
                                    	 
                                     }
                                 }
@@ -110,123 +128,47 @@ var stompClient = null;
 					        { name: "create", text: "Add" }
 					      ],
 					    columns: [
-					    	{ field:"siteProjectsId", title:"Site Projects Id", width: "150px" },
-					    	{ field:"siteInfoId", title:"Site Info Id", width: "120px" },
+					    	{ field:"siteProjectsId", title:"Site Projects Id", width: "150px",editable: isEditable },
+					    	{ field:"siteProjectsId", title:"Site Info Id", width: "120px" ,editable: isEditable},
 					    	{ field:"projectName", title:"Project Name", width: "150px" },
 					    	{ field:"siteName", title:"Site Name", width: "120px" },
 					    	{ field:"pslc", title:"PSLC", width: "120px" },
 					    	{ field:"poName", title:"Purchase Order Name", width: "180px" },
-					    	{ field:"teritory", title:"Teritory", width: "120px" },
-					    	{ field:"market" ,title:"Market", width: "120px" },
-					    	{ field:"poStatus", title:"PO Status", width: "120px" },
+					    	//{ field:"teritory", title:"Teritory", width: "120px" },
+					    	//{ field:"market" ,title:"Market", width: "120px" },
+					    	//{ field:"poStatus", title:"PO Status", width: "120px" },
 					    	{ field:"siteTracker", title:"Site Trakcer", width: "120px" },
-					    	{ field:"projectStatus", title:"Project Status", width: "120px" },
-					    	{ field:"projectType", title:"Project Type", width: "120px" },
-					    	{ field:"customerProjectType", title:"Customer Project Type", width: "120px" },
-					    	{ field:"lastModifiedBy", title:"Last Modified", width: "120px" },
-					    	{ field:"lastModifiedDate", title:"Last Modified Date", width: "240px",customBoolEditor },
+					    	{ field:"projectStatus", title:"Project Status", width: "120px",customBoolEditor },
+					    	//{ field:"projectType", title:"Project Type", width: "120px" },
+					    	//{ field:"customerProjectType", title:"Customer Project Type", width: "120px" },
+					    	//{ field:"lastModifiedBy", title:"Last Modified", width: "120px" ,customBoolEditor },
                             { command: ["edit", "destroy"], title: "&nbsp;", width: "200px" }
                             ],
                   editable: "popup"
 				});
        		});
            
-            }
+            
+      
+    }
     else{
+    	copyGrid();
         	
-			 socketCurrentData = data;
-			  $("#grid").kendoGrid({
-					dataSource: {
-				      transport: {
-				         read: function (e) {
-				             //readData(options);
-				        	 e.success(socketCurrentData);
-				        //  window.location.replace("dashboard");
-				             },
-				        update: function (options) {
-				        updateRow(options);
-				        window.location.replace("/");
-				       
-				             },
-				        
-				             destroy: function (options) {
-				            	 deleteRow(options);
-				                readData(options);
-				            	    
-					             },
-					        
-				             create: function (options) {
-					            createRow(options);
-					            window.location.replace("/");
-					            	  },
-				          parameterMap: function (options, operation) {
-				        		if (operation !== "read" && options.models) {
-				              		return { models: kendo.stringify(options.models) };
-				              		}
-				            	}
-				          },
-				        schema: {
-				        	 model: {
-                              id: "siteProjectsId",
-                              fields: {
-                             	 siteProjectsId: {type:"string"},
-                             	 siteInfoId: {type:"string"},
-                             	 projectName: {type:"string"},
-                             	 siteName: {type:"string"},
-                             	 pslc: {type:"string"},
-                             	 poName: {type:"string"},
-                             	 teritory: {type:"string"},
-                             	 market: {type:"string"},
-                             	 poStatus: {type:"string"},
-                             	 siteTracker: {type:"string"},
-                             	 projectStatus: {type:"string"},
-                             	 projectType: {type:"string"},
-                             	 customerProjectType: {type:"string"},
-                             	 lastModifiedBy: {type:"string"},
-                             	 lastModifiedDate: {type:"string"}
-                             	 
-                              }
-                          }
-				        },
-				         pageSize: 7
-				    },
-				    pageable: true,
-                 sortable: true,
-                 filterable: true,
-				    resizable:true,
-
-				    toolbar: [
-				        { name: "create", text: "Add" }
-				      ],
-				    columns: [
-				    	{ field:"siteProjectsId", title:"Site Projects Id", width: "150px" },
-				    	{ field:"siteInfoId", title:"Site Info Id", width: "120px" },
-				    	{ field:"projectName", title:"Project Name", width: "150px" },
-				    	{ field:"siteName", title:"Site Name", width: "120px" },
-				    	{ field:"pslc", title:"PSLC", width: "120px" },
-				    	{ field:"poName", title:"Purchase Order Name", width: "180px" },
-				    	{ field:"teritory", title:"Teritory", width: "120px" },
-				    	{ field:"market" ,title:"Market", width: "120px" },
-				    	{ field:"poStatus", title:"PO Status", width: "120px" },
-				    	{ field:"siteTracker", title:"Site Trakcer", width: "120px" },
-				    	{ field:"projectStatus", title:"Project Status", width: "120px" },
-				    	{ field:"projectType", title:"Project Type", width: "120px" },
-				    	{ field:"customerProjectType", title:"Customer Project Type", width: "120px" },
-				    	{ field:"lastModifiedBy", title:"Last Modified", width: "120px" },
-				    	{ field:"lastModifiedDate", title:"Last Modified Date", width: "240px",customBoolEditor },
-                      { command: ["edit", "destroy"], title: "&nbsp;", width: "200px" }
-                      ],
-            editable: "popup"
-			});
-    	}
+			
+}
        	 });
         });
     });
+    
             
             
         
         
 var wnd,detailsTemplate;
+if(currrentData == ""){
+	copyGrid();	
+}
+
 									
 										
 									function customBoolEditor(container, options) {
@@ -284,6 +226,7 @@ function updateRow(options){
 	        	}),
 	        success: function (result) {
 	        		 options.success(result);
+	        		// popupNotification.show("PO Request Created Successfuly", "info");
 	 	    },
 	        error: function (result) {
 	        	options.error(result);
@@ -338,3 +281,106 @@ function deleteRow(options){
         }
       });
 }
+       
+
+
+
+
+function copyGrid(){
+	dataSource12.fetch(function(){
+   		var data = dataSource12._pristineData;
+   	socketCurrentData = data;
+	
+	  $("#grid").kendoGrid({
+			dataSource: {
+		      transport: {
+		         read: function (e) {
+		             //readData(options);
+		        	 e.success(socketCurrentData);
+		        //  window.location.replace("dashboard");
+		             },
+		        update: function (options) {
+		        updateRow(options);
+		       // window.location.replace("/");
+		       
+		             },
+		        
+		             destroy: function (options) {
+		            	 deleteRow(options);
+		                readData(options);
+		            	    
+			             },
+			        
+		             create: function (options) {
+			            createRow(options);
+			            window.location.replace("/");
+			            	  },
+		          parameterMap: function (options, operation) {
+		        		if (operation !== "read" && options.models) {
+		              		return { models: kendo.stringify(options.models) };
+		              		}
+		            	}
+		          },
+		        schema: {
+		        	 model: {
+                     id: "siteProjectsId",
+                     fields: {
+                    	 siteProjectsId: {type:"string"},
+                    	 siteInfoId: {type:"string"},
+                    	 projectName: {type:"string"},
+                    	 siteName: {type:"string"},
+                    	 pslc: {type:"string"},
+                    	 poName: {type:"string"},
+                    	 teritory: {type:"string"},
+                    	 market: {type:"string"},
+                    	 poStatus: {type:"string"},
+                    	 siteTracker: {type:"string"},
+                    	 projectStatus: {type:"string"},
+                    	 projectType: {type:"string"},
+                    	 customerProjectType: {type:"string"},
+                    	 lastModifiedBy: {type:"string"},
+                    	 
+                    	 
+                     }
+                 }
+		        },
+		         pageSize: 7
+		    },
+		    pageable: true,
+        sortable: true,
+        filterable: true,
+		    resizable:true,
+
+		    toolbar: [
+		        { name: "create", text: "Add" }
+		      ],
+		    columns: [
+		    	{ field:"siteProjectsId", title:"Site Projects Id", width: "150px", editable: isEditable},
+		    	{ field:"siteProjectsId", title:"Site Info Id", width: "120px" ,editable: isEditable},
+		    	{ field:"projectName", title:"Project Name", width: "150px" },
+		    	{ field:"siteName", title:"Site Name", width: "120px" },
+		    	{ field:"pslc", title:"PSLC", width: "120px" },
+		    	{ field:"poName", title:"Purchase Order Name", width: "180px" },
+		    	//{ field:"teritory", title:"Teritory", width: "120px" },
+		    	//{ field:"market" ,title:"Market", width: "120px" },
+		    	//{ field:"poStatus", title:"PO Status", width: "120px" },
+		    	{ field:"siteTracker", title:"Site Trakcer", width: "120px" },
+		    	{ field:"projectStatus", title:"Project Status", width: "120px",customBoolEditor },
+		    	//{ field:"projectType", title:"Project Type", width: "120px" },
+		    	//{ field:"customerProjectType", title:"Customer Project Type", width: "120px" },
+		    	//{ field:"lastModifiedBy", title:"Last Modified", width: "120px" ,customBoolEditor },
+               { command: ["edit", "destroy"], title: "&nbsp;", width: "200px" }
+             ],
+   editable: "popup"
+	});
+	});
+}
+
+function isEditable(e){
+    var dataSource = $("#grid").data("kendoGrid").dataSource;
+    // If the id(ProductID) is null, then it is editable.
+    return e.siteProjectsId == null;
+    return e.siteInfoId== null;
+  }
+
+});
