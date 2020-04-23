@@ -10,15 +10,13 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.fuze.websockets.dao.entity.SiteProjectsFieldChanges;
 import com.fuze.websockets.dao.entity.PORequest;
-import com.fuze.websockets.dao.entity.PORequestHistory;
-import com.fuze.websockets.dao.repository.PORequestHistoryRepository;
+import com.fuze.websockets.dao.entity.SiteProjectsFieldChanges;
+import com.fuze.websockets.dao.exception.WebSocketDBResourceNotFoundException;
 import com.fuze.websockets.dao.repository.PORequestRepository;
 import com.fuze.websockets.dao.repository.SiteProjectsFieldChangesRepository;
 
@@ -34,29 +32,33 @@ public class WebsocketDAOService {
 	private SiteProjectsFieldChangesRepository siteProjectsFieldChangesRepository;
 	@Autowired
 	private PORequestRepository poRequestRepository;
-    
+
 	public List<Map<String, Object>> getSiteProjectFieldChangesJSON() {
 
 		List<Map<String, Object>> list = new ArrayList<>();
 		Map<String, Object> internalMap = new HashMap<String, Object>();
 
 		Map<String, Object> siteProjectFieldChangesReponse = getSiteProjectFieldChanges();
+		try {
+			Set set = siteProjectFieldChangesReponse.keySet();
+			Iterator iter = set.iterator();
+			while (iter.hasNext()) {
+				String keyStr = (String) iter.next();
+				String[] strArr = keyStr.split(":");
 
-		Set set = siteProjectFieldChangesReponse.keySet();
-		Iterator iter = set.iterator();
-		while (iter.hasNext()) {
-			String keyStr = (String) iter.next();
-			String[] strArr = keyStr.split(":");
+				String siteProjectId = strArr[0];
+				String siteInfoId = strArr[1];
 
-			String siteProjectId = strArr[0];
-			String siteInfoId = strArr[1];
+				internalMap = (Map<String, Object>) siteProjectFieldChangesReponse.get(keyStr);
 
-			internalMap = (Map<String, Object>) siteProjectFieldChangesReponse.get(keyStr);
-
-			internalMap.put("SITE_PROJECT_ID", siteProjectId);
-			internalMap.put("SITE_INFO_ID", siteInfoId);
-			list.add(internalMap);
+				internalMap.put("SITE_PROJECT_ID", siteProjectId);
+				internalMap.put("SITE_INFO_ID", siteInfoId);
+				list.add(internalMap);
+			}
+		}catch (Exception e) {
+			LOGGER.info("Failed to load the Site Projects Field Changes.!");
 		}
+
 		return list;
 
 	}
@@ -66,6 +68,10 @@ public class WebsocketDAOService {
 		Map<String, Object> response = new HashMap<String, Object>();
 		try {
 			List<SiteProjectsFieldChanges> dbSiteProjectsFieldChanges = siteProjectsFieldChangesRepository.findAll();
+			if(null == dbSiteProjectsFieldChanges || dbSiteProjectsFieldChanges.isEmpty()) {
+				throw new WebSocketDBResourceNotFoundException("Site Field Changes Not Found.");
+			}
+
 			Map<String, Object> mapRes = new HashMap<String, Object>();
 			if (!CollectionUtils.isEmpty(dbSiteProjectsFieldChanges)) {
 				for (SiteProjectsFieldChanges row : dbSiteProjectsFieldChanges) {
@@ -91,26 +97,34 @@ public class WebsocketDAOService {
 				response.put("message", "No Data Found!");
 				LOGGER.info("No Data Available!");
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (WebSocketDBResourceNotFoundException e) {
+			LOGGER.info("No Fields found.");
+			response.put("status", 0);
+			response.put("message", "No Data Found!");
+
+		}
+		catch (Exception e) {
 			LOGGER.info("Failed to load the Site Projects Field Changes.!");
+			response.put("status", 0);
+			response.put("message", "No Data Found!");
+
 		}
 		return response;
 	}
-	
+
 	public void createPORequest(PORequest porequest) {
 		poRequestRepository.save(porequest);
-		
+
 	}
 	public PORequest getPORequest(int id) {
 		Optional<PORequest> poRequest = poRequestRepository.findById(id);
 		if(poRequest!=null) {
 			return poRequest.get();
 		}
-		
+
 		return null;
 	}
-		
+
 	public Map<String, Object> getLatestPoRequestHistory() {
 
 		Map<String, Object> response = new HashMap<String, Object>();

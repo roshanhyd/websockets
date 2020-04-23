@@ -37,7 +37,7 @@ public class WebsocketDAOController {
 		List<Map<String, Object>>  siteProjectFieldsMap = websocketDAOService.getSiteProjectFieldChangesJSON();
 				
 		if (siteProjectFieldsMap.isEmpty()) {
-			throw new WebSocketDBResourceNotFoundException("No fields Found.");
+			return new ResponseEntity<List<Map<String, Object>>>(siteProjectFieldsMap, HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<List<Map<String, Object>>>(siteProjectFieldsMap, HttpStatus.OK);
 	}

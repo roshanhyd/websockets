@@ -129,11 +129,8 @@ var stompClient = null;
                        sortable: true,
                        filterable: true,
 					    resizable:true,
-
-					    toolbar: [
-					        { name: "create", text: "Add" }
-					      ],
-					    columns: [
+					    	columns: [
+					    	{ command: ["edit"], title: "&nbsp;", width: "100px" },
 					    	{ field:"siteProjectsId", title:"Site Projects Id", width: "150px",editable: isEditable },
 					    	{ field:"siteProjectsId", title:"Site Info Id", width: "120px" ,editable: isEditable},
 					    	{ field:"projectName", title:"Project Name", width: "150px" },
@@ -143,12 +140,12 @@ var stompClient = null;
 					    	//{ field:"teritory", title:"Teritory", width: "120px" },
 					    	//{ field:"market" ,title:"Market", width: "120px" },
 					    	//{ field:"poStatus", title:"PO Status", width: "120px" },
-					    	{ field:"siteTracker", title:"Site Trakcer", width: "120px" },
-					    	{ field:"projectStatus", title:"Project Status", width: "120px",customBoolEditor },
+					    	{ field:"siteTracker", title:"Site Tracker", width: "120px" },
+					    	{ field:"projectStatus", title:"Project Status", width: "120px",customBoolEditor }
 					    	//{ field:"projectType", title:"Project Type", width: "120px" },
 					    	//{ field:"customerProjectType", title:"Customer Project Type", width: "120px" },
 					    	//{ field:"lastModifiedBy", title:"Last Modified", width: "120px" ,customBoolEditor },
-                            { command: ["edit", "destroy"], title: "&nbsp;", width: "200px" }
+                            
                             ],
                   editable: "popup"
 				});
@@ -359,11 +356,9 @@ function copyGrid(){
         sortable: true,
         filterable: true,
 		    resizable:true,
-
-		    toolbar: [
-		        { name: "create", text: "Add" }
-		      ],
-		    columns: [
+		    	columns: [
+		    		{ command: ["edit"], title: "&nbsp;", width: "100px" },
+		    		
 		    	{ field:"siteProjectsId", title:"Site Projects Id", width: "150px", editable: isEditable},
 		    	{ field:"siteProjectsId", title:"Site Info Id", width: "120px" ,editable: isEditable},
 		    	{ field:"projectName", title:"Project Name", width: "150px" },
@@ -373,12 +368,12 @@ function copyGrid(){
 		    	//{ field:"teritory", title:"Teritory", width: "120px" },
 		    	//{ field:"market" ,title:"Market", width: "120px" },
 		    	//{ field:"poStatus", title:"PO Status", width: "120px" },
-		    	{ field:"siteTracker", title:"Site Trakcer", width: "120px" },
-		    	{ field:"projectStatus", title:"Project Status", width: "120px",customBoolEditor },
+		    	{ field:"siteTracker", title:"Site Tracker", width: "120px" },
+		    	
 		    	//{ field:"projectType", title:"Project Type", width: "120px" },
 		    	//{ field:"customerProjectType", title:"Customer Project Type", width: "120px" },
 		    	//{ field:"lastModifiedBy", title:"Last Modified", width: "120px" ,customBoolEditor },
-               { command: ["edit", "destroy"], title: "&nbsp;", width: "200px" }
+		    	{ field:"projectStatus", title:"Project Status", width: "120px",customBoolEditor }
              ],
    editable: "popup"
 	});
