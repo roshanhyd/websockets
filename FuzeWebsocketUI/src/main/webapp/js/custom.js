@@ -14,13 +14,8 @@ var dataSource12 = new kendo.data.DataSource({
     }
   });  
 
-$(window).on("load", function(){
-		   kendo.ui.progress(element, true);  
-	   });
-	
-
 $(function(){
-    function displayLoading(target) {
+/*    function displayLoading(target) {
         var element = $(target);
         kendo.ui.progress(element, true);
         setTimeout(function(){
@@ -29,7 +24,7 @@ $(function(){
     }
 
     displayLoading(document.body);
-    
+*/    
 var stompClient = null;
 //$('#btn').click(function () {// if you want to do this on any click then enable
     var socket = new SockJS('http://localhost:9191/fuze-websocket');

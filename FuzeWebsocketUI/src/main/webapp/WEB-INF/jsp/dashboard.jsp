@@ -2,8 +2,6 @@
 <html lang="en">
 
 <head>
-
-
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport"
@@ -19,6 +17,32 @@
 	 
 	
 <style type="text/css">
+
+#loader { 
+z-index:1;
+            border: 5px solid #f3f3f3; 
+            border-radius: 50%; 
+            border-top: 5px solid #4e73df; 
+            width: 88px; 
+            height: 88px; 
+            animation: spin 1s linear infinite; 
+        } 
+          
+        @keyframes spin { 
+            100% { 
+                transform: rotate(360deg); 
+            } 
+        } 
+          
+        .center { 
+            position: absolute; 
+            top: 0; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            margin: auto; 
+        } 
+
 div.k-loading-mask
 {
     z-index: 1; /* must be larger than the z-index:2 of #container */
@@ -61,6 +85,7 @@ margin-left:50px;
 </head>
 
 <body id="page-top">
+<div id="loader" class="center"></div> 
 	<div id="wrapper">
 		<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 <li>
@@ -217,7 +242,7 @@ margin-left:50px;
 					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
 					<button class="close" type="button" data-dismiss="modal"
 						aria-label="Close">
-						<span aria-hidden="true">×</span>
+						<span aria-hidden="true">Ã</span>
 					</button>
 				</div>
 				<div class="modal-body">Select "Logout" below if you are ready
@@ -230,6 +255,7 @@ margin-left:50px;
 			</div>
 		</div>
 	</div>
+	
 <script src="https://kendo.cdn.telerik.com/2020.1.406/js/kendo.all.min.js"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
@@ -237,7 +263,22 @@ margin-left:50px;
 	<script src="../js/sb-admin-2.min.js"></script>
 	<script src="../js/custom.js"></script>
 
-	
+<script>
+document.onreadystatechange = function() { 
+    if (document.readyState !== "complete") { 
+        document.querySelector( 
+          "body").style.visibility = "hidden"; 
+        document.querySelector( 
+          "#loader").style.visibility = "visible"; 
+    } else { 
+        document.querySelector( 
+          "#loader").style.display = "none"; 
+        document.querySelector( 
+          "body").style.visibility = "visible"; 
+    } 
+}; 
+
+</script>	
 	
 
     
